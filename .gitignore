@@ -1,0 +1,14 @@
+# Private: site backup, local WordPress copy (patient leads, passwords)
+backup/
+.local/
+*.sql
+*.sql.gz
+*.tar.gz
+wp-config.php
+.env*
+
+# Tooling
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
