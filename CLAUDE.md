@@ -8,6 +8,7 @@ Full redesign of **hhphysio.com**, a physiotherapy clinic in Bengaluru with bran
 - **Protect SEO**: keep every existing URL (269 in the sitemap), Yoast titles and descriptions, and canonicals. Don't rename slugs.
 - At launch, move **only the theme and the rebuilt pages**. Never upload the local database to live, because that would wipe new posts and leads.
 - On the local copy, keep email, analytics, AdSense, Site Kit and LiteSpeed/CDN switched off.
+- **Original content and logo stay unchanged.** Take wording from `original-site/pages/*.md` (a scrape of the live site) and use the original logo. Every addition, removal, replacement or move gets logged in **`REDESIGN-DIARY.md`** (story + section-by-section log + launch checklist).
 
 ## Local copy
 - Built from the 2026-11-01 hPanel backup in `backup/`. It runs from `.local/` (portable PHP 8.2 + MariaDB 11.8; nothing is installed system-wide).
@@ -28,7 +29,20 @@ The new custom theme lives in `wp-theme/healing-hands/` (junction-linked into `.
 - self-hosted fonts
 - small vanilla JS only
 
-It drops WPBakery, SiteOrigin, jQuery and AdSense. YouTube and the Kivihealth booking widget load only when clicked.
+It drops WPBakery, SiteOrigin, jQuery and AdSense. YouTube loads only when clicked.
+
+### Theme layout & commands
+- `npm run build` / `npm run watch`: Tailwind v3 (`tailwind.config.js` holds the Stitch tokens) compiles `src/main.css` → `assets/css/main.css`. **Commit the built CSS**; it's what gets uploaded.
+- `npm run icons`: rebuilds the Material Symbols subset font after you add an icon via `hh_icon()`.
+- All site wording lives in `inc/data.php`, copied word for word from the original.
+- Homepage sections: `front-page.php` → `template-parts/home/*.php`.
+- The hero form is the site's existing CF7 form **"Physiotherapy Near Me"** ("Get a Call Back"), restyled via `html_class="hh-form"`. It keeps its thank-you-page redirect (wpcf7-redirect).
+- "Book Now" buttons go to `/book-appointment/`, the original target. Kivihealth can't be iframed on hhphysio.com (CSP `frame-ancestors`).
+- `npm i` then `node scripts/crawl-original.mjs` re-scrapes the live site into `original-site/` (read-only; raw HTML goes to `.local/original-html/`).
+- Content rule: never invent clinic claims (ratings, patient counts, certifications, hours, doctor bios). Testimonials are quoted verbatim.
+
+### Launch checklist
+Kept in `REDESIGN-DIARY.md` (Part 4).
 
 Full plan: `C:\Users\garva\.claude\plans\ok-see-i-ll-tell-elegant-feigenbaum.md`
 

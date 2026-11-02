@@ -1,0 +1,100 @@
+/* Source stylesheet. Build with `npm run build` → assets/css/main.css */
+
+@font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 400; font-display: swap; src: url(../fonts/playfair-display-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 500; font-display: swap; src: url(../fonts/playfair-display-latin-500-normal.woff2) format("woff2"); }
+@font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 600; font-display: swap; src: url(../fonts/playfair-display-latin-600-normal.woff2) format("woff2"); }
+@font-face { font-family: "Playfair Display"; font-style: italic; font-weight: 400; font-display: swap; src: url(../fonts/playfair-display-latin-400-italic.woff2) format("woff2"); }
+@font-face { font-family: "Playfair Display"; font-style: italic; font-weight: 500; font-display: swap; src: url(../fonts/playfair-display-latin-500-italic.woff2) format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url(../fonts/plus-jakarta-sans-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url(../fonts/plus-jakarta-sans-latin-500-normal.woff2) format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url(../fonts/plus-jakarta-sans-latin-600-normal.woff2) format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-style: normal; font-weight: 700; font-display: swap; src: url(../fonts/plus-jakarta-sans-latin-700-normal.woff2) format("woff2"); }
+/* Icon subset: regenerate with `npm run icons` after adding an icon. */
+@font-face { font-family: "Material Symbols Outlined"; font-style: normal; font-weight: 400; font-display: block; src: url(../fonts/material-symbols-subset.woff2) format("woff2"); }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :focus-visible { @apply outline-2 outline-offset-2 outline-secondary; }
+  /* Soft paper grain over the ivory canvas (tiny inline SVG noise, ~5% green tint). */
+  body {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .13 0 0 0 0 .29 0 0 0 0 .2 0 0 0 .055 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  summary::-webkit-details-marker { display: none; }
+}
+
+@layer components {
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    vertical-align: middle;
+    white-space: nowrap;
+    direction: ltr;
+    font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    width: 1em;
+    flex-shrink: 0;
+  }
+
+  /* ---------- Calm background decor (all decorative, aria-hidden) ---------- */
+  /* Faint topographic contour lines. */
+  .hh-topo { background-image: url(../img/topo.svg); background-repeat: no-repeat; background-size: max(1600px, 100%) auto; background-position: center top; }
+  /* Botanical silhouettes placed at section edges (see hh_leaf()). */
+  .hh-decor { position: absolute; pointer-events: none; user-select: none; z-index: 0; max-width: none; will-change: transform; }
+  .hh-sway { animation: hh-sway 24s ease-in-out infinite alternate; transform-origin: 50% 100%; }
+  .hh-drift { animation: hh-drift 30s ease-in-out infinite alternate; }
+  @keyframes hh-sway { from { transform: rotate(var(--r, 0deg)) translateY(0); } to { transform: rotate(calc(var(--r, 0deg) + 5deg)) translateY(-12px); } }
+  @keyframes hh-drift { from { transform: rotate(var(--r, 0deg)) translate(0, 0); } to { transform: rotate(calc(var(--r, 0deg) - 4deg)) translate(14px, -18px); } }
+  /* Hand-drawn dividers: the line draws itself when scrolled into view (dash longer than the path). */
+  .hh-draw .hh-draw-line { stroke-dasharray: 1500; stroke-dashoffset: 1500; transition: stroke-dashoffset 2s cubic-bezier(.16, 1, .3, 1); }
+  .hh-draw .hh-draw-leaf { opacity: 0; transform: scale(.6); transform-origin: center; transform-box: fill-box; transition: opacity .6s .9s, transform .6s .9s cubic-bezier(.16, 1, .3, 1); }
+  .hh-draw.is-in .hh-draw-line { stroke-dashoffset: 0; }
+  .hh-draw.is-in .hh-draw-leaf { opacity: 1; transform: none; }
+  /* Gentle fade-up on scroll. Only hidden when JS is running, so content never disappears. */
+  .js .hh-reveal { opacity: 0; transform: translateY(22px); transition: opacity .9s cubic-bezier(.16, 1, .3, 1), transform .9s cubic-bezier(.16, 1, .3, 1); }
+  .js .hh-reveal.is-in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .hh-sway, .hh-drift { animation: none; }
+    .js .hh-reveal, .hh-draw .hh-draw-line, .hh-draw .hh-draw-leaf { opacity: 1; transform: none; stroke-dashoffset: 0; transition: none; }
+  }
+
+  /* Body-map hotspots (Treatment by Symptoms). */
+  .hh-spot-glow { opacity: 0; transition: opacity .35s; transform-box: fill-box; transform-origin: center; }
+  .hh-spot.is-active .hh-spot-glow { opacity: 1; animation: hh-pulse 2.4s ease-in-out infinite; }
+  .hh-spot-ring { fill: #FBF9F5; stroke: #5E8B71; stroke-width: 1.5; transform-box: fill-box; transform-origin: center; transition: all .25s; }
+  .hh-spot-core { fill: #1B3B2B; transform-box: fill-box; transform-origin: center; transition: all .25s; }
+  .hh-spot:hover .hh-spot-ring { stroke: #3B7A8C; }
+  .hh-spot.is-active .hh-spot-ring { fill: #E8F1F4; stroke: #3B7A8C; stroke-width: 2; transform: scale(1.25); }
+  .hh-spot.is-active .hh-spot-core { fill: #3B7A8C; transform: scale(1.35); }
+  @keyframes hh-pulse { 50% { transform: scale(1.25); opacity: .7; } }
+  /* Tab panels fade in when switched. */
+  .hh-panel:not([hidden]) { animation: hh-fade .45s cubic-bezier(.16, 1, .3, 1); }
+  @keyframes hh-fade { from { opacity: 0; transform: translateY(8px); } }
+  @media (prefers-reduced-motion: reduce) { .hh-spot.is-active .hh-spot-glow, .hh-panel:not([hidden]) { animation: none; } }
+
+  /* Contact Form 7: the site's original "Get a Call Back" form, restyled (html_class="hh-form"). */
+  .hh-form { @apply grid grid-cols-1 sm:grid-cols-3 gap-3.5; }
+  .hh-form > p:last-of-type, .hh-form .wpcf7-response-output { @apply sm:col-span-3; }
+  .hh-form p { margin: 0; }
+  .hh-form label { @apply block text-label-sm font-label-sm uppercase text-text-muted; }
+  .hh-form input:not([type=submit]), .hh-form select, .hh-form textarea {
+    @apply mt-1.5 w-full normal-case tracking-normal text-body-sm font-body-sm bg-canvas-ivory border border-border-subtle rounded-lg px-3 py-2.5 text-text-ink focus:border-secondary focus:ring-1 focus:ring-secondary;
+  }
+  .hh-form .wpcf7-submit {
+    @apply w-full mt-1 cursor-pointer bg-forest-rich hover:bg-primary-container text-canvas-ivory font-label-md text-label-md py-3 px-6 rounded-xl transition-all duration-200 shadow hover:shadow-lg;
+  }
+  .hh-form .wpcf7-not-valid-tip { @apply text-xs text-error mt-1; }
+  .hh-form .wpcf7-response-output { @apply !mx-0 !mt-4 !mb-0 rounded-lg !border text-body-sm px-3 py-2; }
+  .hh-form .wpcf7-response-output:empty { display: none; }
+  .hh-form .wpcf7-spinner { @apply hidden; }
+  .hh-form br { display: none; }
+}
