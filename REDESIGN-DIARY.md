@@ -114,6 +114,15 @@ The story of the hhphysio.com redesign, from beginning to end, with an exact rec
 - **Built with** about 60 lines of plain JavaScript in `assets/js/main.js`. No libraries were added.
 - **Checks:** everything works without JavaScript, respects the reduced-motion setting, and was tested in a real browser on desktop and phone.
 
+### 2 Nov 2026: AI Studio draft deployed on Vercel (not the real site)
+- **Where:** your Vercel project `healing-hands` is linked to the GitHub repo `Garv1105/Healing-Hands-Draft`, which is the AI Studio draft (React/Vite).
+- **Why the first build failed:** an npm package conflict. The draft's `package.json` pinned `esbuild ^0.25`, but its Vite 8 needs `^0.27` or newer.
+- **Fix:** bumped `esbuild` to `^0.27.0`.
+- **Kept out of Google:** added an `X-Robots-Tag: noindex, nofollow` header (`vercel.json`) and a `robots.txt` that blocks crawlers. The draft contains invented clinics and phone numbers that must not show up in search results.
+- **Deployed** from `design/ai-studio/` with the Vercel CLI: production is at https://healing-hands-psi.vercel.app.
+- **Not yet pushed:** the fix is only on your PC. Until it's committed and pushed to the draft repo, the next GitHub push will fail again.
+- **This is not hhphysio.com.** The real site stays WordPress on Hostinger, because Vercel can't run WordPress (PHP + MySQL).
+
 ---
 
 ## Part 2: Homepage compared with the original
@@ -239,6 +248,7 @@ Original: `original-site/pages/home.md`. New: `wp-theme/healing-hands/front-page
 - [ ] Purge LiteSpeed.
 - [ ] Re-crawl with `node scripts/crawl-original.mjs` and compare against `original-site/`.
 - [ ] Submit the sitemap in Search Console.
+- [ ] Delete the Vercel preview project `healing-hands` (https://healing-hands-psi.vercel.app). It is noindex, but it shouldn't outlive launch.
 
 ---
 
@@ -253,3 +263,5 @@ Original: `original-site/pages/home.md`. New: `wp-theme/healing-hands/front-page
 | 2026-11-02 | Homepage v2: original content, logo, order and the original "Get a Call Back" form. v1's newly written sections removed: three-step approach, mission, "Why Healing Hands" grid, FAQ, call-to-action band, 6-area symptom explorer, custom call-back form | `wp-theme/healing-hands/`, `inc/data.php` |
 | 2026-11-02 | Calm botanical background and card restyle (design only, no content changes) | `scripts/decor.mjs`, `assets/img/`, `src/main.css`, `template-parts/home/*`, `functions.php` |
 | 2026-11-02 | Scroll story (About) and Anatomical Region Selector (Treatment by Symptoms), adapted from the AI Studio draft | `about.php`, `symptoms.php`, `assets/js/main.js`, `src/main.css`, `inc/data.php` |
+| 2026-11-02 | Static noindex preview of the local site deployed to Vercel (homepage + linked pages; form does not submit). Export kept in `.local/preview/` (not committed) | `.local/preview/`, Vercel project `healing-hands` |
+| 2026-11-02 | README: added AI Studio draft, diary pointer and Vercel preview notes | `README.md` |
